@@ -22,7 +22,7 @@ func BroadcastTxRequestHandlerFn(cdc *wire.Codec, cliCtx context.CLIContext) htt
 			return
 		}
 
-		txBytes, err := cliCtx.Codec.MarshalBinary(m.Tx)
+		txBytes, err := cliCtx.Codec.MarshalBinaryLengthPrefixed(m.Tx)
 		if err != nil {
 			utils.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return

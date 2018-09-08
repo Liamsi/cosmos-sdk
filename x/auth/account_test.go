@@ -93,17 +93,17 @@ func TestBaseAccountMarshal(t *testing.T) {
 	codec := wire.NewCodec()
 	wire.RegisterCrypto(codec)
 
-	b, err := codec.MarshalBinary(acc)
+	b, err := codec.MarshalBinaryLengthPrefixed(acc)
 	require.Nil(t, err)
 
 	acc2 := BaseAccount{}
-	err = codec.UnmarshalBinary(b, &acc2)
+	err = codec.UnmarshalBinaryLengthPrefixedBinary(b, &acc2)
 	require.Nil(t, err)
 	require.Equal(t, acc, acc2)
 
 	// error on bad bytes
 	acc2 = BaseAccount{}
-	err = codec.UnmarshalBinary(b[:len(b)/2], &acc2)
+	err = codec.UnmarshalBinaryLengthPrefixedBinary(b[:len(b)/2], &acc2)
 	require.NotNil(t, err)
 
 }

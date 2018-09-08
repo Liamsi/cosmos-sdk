@@ -28,8 +28,8 @@ type Params struct {
 
 // Equal returns a boolean determining if two Param types are identical.
 func (p Params) Equal(p2 Params) bool {
-	bz1 := MsgCdc.MustMarshalBinary(&p)
-	bz2 := MsgCdc.MustMarshalBinary(&p2)
+	bz1 := MsgCdc.MustMarshalBinaryLengthPrefixed(&p)
+	bz2 := MsgCdc.MustMarshalBinaryLengthPrefixed(&p2)
 	return bytes.Equal(bz1, bz2)
 }
 
@@ -72,7 +72,7 @@ func MustUnmarshalParams(cdc *wire.Codec, value []byte) Params {
 
 // unmarshal the current staking params value from store key
 func UnmarshalParams(cdc *wire.Codec, value []byte) (params Params, err error) {
-	err = cdc.UnmarshalBinary(value, &params)
+	err = cdc.UnmarshalBinaryLengthPrefixedBinary(value, &params)
 	if err != nil {
 		return
 	}

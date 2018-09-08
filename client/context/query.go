@@ -55,7 +55,7 @@ func (ctx CLIContext) QuerySubspace(subspace []byte, storeName string) (res []sd
 		return res, err
 	}
 
-	ctx.Codec.MustUnmarshalBinary(resRaw, &res)
+	ctx.Codec.MustUnmarshalBinaryLengthPrefixed(resRaw, &res)
 	return
 }
 
@@ -344,7 +344,7 @@ func (ctx CLIContext) verifyProof(path string, resp abci.ResponseQuery) error {
 
 	var multiStoreProof store.MultiStoreProof
 	cdc := wire.NewCodec()
-	err = cdc.UnmarshalBinary(resp.Proof, &multiStoreProof)
+	err = cdc.UnmarshalBinaryLengthPrefixedBinary(resp.Proof, &multiStoreProof)
 	if err != nil {
 		return errors.Wrap(err, "failed to unmarshalBinary rangeProof")
 	}

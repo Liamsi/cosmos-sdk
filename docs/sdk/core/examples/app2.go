@@ -199,7 +199,7 @@ func (tx app2Tx) GetSignature() []byte {
 func tx2Decoder(cdc *wire.Codec) sdk.TxDecoder {
 	return func(txBytes []byte) (sdk.Tx, sdk.Error) {
 		var tx app2Tx
-		err := cdc.UnmarshalBinary(txBytes, &tx)
+		err := cdc.UnmarshalBinaryLengthPrefixedBinary(txBytes, &tx)
 		if err != nil {
 			return nil, sdk.ErrTxDecode(err.Error())
 		}

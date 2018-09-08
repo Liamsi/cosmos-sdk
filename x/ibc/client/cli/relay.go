@@ -114,7 +114,7 @@ OUTER:
 		var processed int64
 		if processedbz == nil {
 			processed = 0
-		} else if err = c.cdc.UnmarshalBinary(processedbz, &processed); err != nil {
+		} else if err = c.cdc.UnmarshalBinaryLengthPrefixedBinary(processedbz, &processed); err != nil {
 			panic(err)
 		}
 
@@ -128,7 +128,7 @@ OUTER:
 		var egressLength int64
 		if egressLengthbz == nil {
 			egressLength = 0
-		} else if err = c.cdc.UnmarshalBinary(egressLengthbz, &egressLength); err != nil {
+		} else if err = c.cdc.UnmarshalBinaryLengthPrefixedBinary(egressLengthbz, &egressLength); err != nil {
 			panic(err)
 		}
 
@@ -189,7 +189,7 @@ func (c relayCommander) getSequence(node string) int64 {
 
 func (c relayCommander) refine(bz []byte, sequence int64, passphrase string) []byte {
 	var packet ibc.IBCPacket
-	if err := c.cdc.UnmarshalBinary(bz, &packet); err != nil {
+	if err := c.cdc.UnmarshalBinaryLengthPrefixedBinary(bz, &packet); err != nil {
 		panic(err)
 	}
 

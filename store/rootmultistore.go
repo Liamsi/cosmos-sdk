@@ -423,7 +423,7 @@ type storeCore struct {
 func (si storeInfo) Hash() []byte {
 	// Doesn't write Name, since merkle.SimpleHashFromMap() will
 	// include them via the keys.
-	bz, _ := cdc.MarshalBinary(si.Core) // Does not error
+	bz, _ := cdc.MarshalBinaryLengthPrefixed(si.Core) // Does not error
 	hasher := ripemd160.New()
 	_, err := hasher.Write(bz)
 	if err != nil {
@@ -442,7 +442,7 @@ func getLatestVersion(db dbm.DB) int64 {
 	if latestBytes == nil {
 		return 0
 	}
-	err := cdc.UnmarshalBinary(latestBytes, &latest)
+	err := cdc.UnmarshalBinaryLengthPrefixedBinary(latestBytes, &latest)
 	if err != nil {
 		panic(err)
 	}
@@ -451,7 +451,7 @@ func getLatestVersion(db dbm.DB) int64 {
 
 // Set the latest version.
 func setLatestVersion(batch dbm.Batch, version int64) {
-	latestBytes, _ := cdc.MarshalBinary(version) // Does not error
+	latestBytes, _ := cdc.MarshalBinaryLengthPrefixed(version) // Does not error
 	batch.Set([]byte(latestVersionKey), latestBytes)
 }
 
@@ -494,7 +494,7 @@ func getCommitInfo(db dbm.DB, ver int64) (commitInfo, error) {
 
 	// Parse bytes.
 	var cInfo commitInfo
-	err := cdc.UnmarshalBinary(cInfoBytes, &cInfo)
+	err := cdc.UnmarshalBinaryLengthPrefixedBinary(cInfoBytes, &cInfo)
 	if err != nil {
 		return commitInfo{}, fmt.Errorf("failed to get rootMultiStore: %v", err)
 	}
@@ -503,7 +503,7 @@ func getCommitInfo(db dbm.DB, ver int64) (commitInfo, error) {
 
 // Set a commitInfo for given version.
 func setCommitInfo(batch dbm.Batch, version int64, cInfo commitInfo) {
-	cInfoBytes, err := cdc.MarshalBinary(cInfo)
+	cInfoBytes, err := cdc.MarshalBinaryLengthPrefixed(cInfo)
 	if err != nil {
 		panic(err)
 	}

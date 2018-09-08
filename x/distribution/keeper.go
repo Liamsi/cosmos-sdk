@@ -53,7 +53,7 @@ package stake
 
 //bz := iterator.Value()
 //var validator Validator
-//k.cdc.MustUnmarshalBinary(bz, &validator)
+//k.cdc.MustUnmarshalBinaryLengthPrefixed(bz, &validator)
 //TotalPower = TotalPower.Add(validator.Power)
 //i++
 //}
@@ -73,7 +73,7 @@ package stake
 //for ; iterator.Valid(); iterator.Next() {
 //pcBytes := iterator.Value()
 //var pc PowerChange
-//k.cdc.MustUnmarshalBinary(pcBytes, &pc)
+//k.cdc.MustUnmarshalBinaryLengthPrefixed(pcBytes, &pc)
 //if pc.Height < earliestHeight {
 //break
 //}
@@ -86,6 +86,6 @@ package stake
 //// set a power change
 //func (k Keeper) setPowerChange(ctx sdk.Context, pc PowerChange) {
 //store := ctx.KVStore(k.storeKey)
-//b := k.cdc.MustMarshalBinary(pc)
+//b := k.cdc.MustMarshalBinaryLengthPrefixed(pc)
 //store.Set(GetPowerChangeKey(pc.Height), b)
 //}

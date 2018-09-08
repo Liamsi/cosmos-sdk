@@ -59,14 +59,14 @@ func (k Keeper) addOrUpdateValidatorSlashingPeriod(ctx sdk.Context, slashingPeri
 		SlashedSoFar: slashingPeriod.SlashedSoFar,
 	}
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinary(slashingPeriodValue)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(slashingPeriodValue)
 	store.Set(GetValidatorSlashingPeriodKey(slashingPeriod.ValidatorAddr, slashingPeriod.StartHeight), bz)
 }
 
 // Unmarshal key/value into a ValidatorSlashingPeriod
 func (k Keeper) unmarshalSlashingPeriodKeyValue(key []byte, value []byte) ValidatorSlashingPeriod {
 	var slashingPeriodValue ValidatorSlashingPeriodValue
-	k.cdc.MustUnmarshalBinary(value, &slashingPeriodValue)
+	k.cdc.MustUnmarshalBinaryLengthPrefixed(value, &slashingPeriodValue)
 	address := sdk.ConsAddress(key[1 : 1+sdk.AddrLen])
 	startHeight := int64(binary.LittleEndian.Uint64(key[1+sdk.AddrLen : 1+sdk.AddrLen+8]))
 	return ValidatorSlashingPeriod{

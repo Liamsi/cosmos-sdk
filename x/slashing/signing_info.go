@@ -15,7 +15,7 @@ func (k Keeper) getValidatorSigningInfo(ctx sdk.Context, address sdk.ConsAddress
 		found = false
 		return
 	}
-	k.cdc.MustUnmarshalBinary(bz, &info)
+	k.cdc.MustUnmarshalBinaryLengthPrefixed(bz, &info)
 	found = true
 	return
 }
@@ -23,7 +23,7 @@ func (k Keeper) getValidatorSigningInfo(ctx sdk.Context, address sdk.ConsAddress
 // Stored by *validator* address (not operator address)
 func (k Keeper) setValidatorSigningInfo(ctx sdk.Context, address sdk.ConsAddress, info ValidatorSigningInfo) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinary(info)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(info)
 	store.Set(GetValidatorSigningInfoKey(address), bz)
 }
 
@@ -36,14 +36,14 @@ func (k Keeper) getValidatorSigningBitArray(ctx sdk.Context, address sdk.ConsAdd
 		signed = false
 		return
 	}
-	k.cdc.MustUnmarshalBinary(bz, &signed)
+	k.cdc.MustUnmarshalBinaryLengthPrefixed(bz, &signed)
 	return
 }
 
 // Stored by *validator* address (not operator address)
 func (k Keeper) setValidatorSigningBitArray(ctx sdk.Context, address sdk.ConsAddress, index int64, signed bool) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshalBinary(signed)
+	bz := k.cdc.MustMarshalBinaryLengthPrefixed(signed)
 	store.Set(GetValidatorSigningBitArrayKey(address, index), bz)
 }
 

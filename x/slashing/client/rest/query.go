@@ -42,7 +42,7 @@ func signingInfoHandlerFn(cliCtx context.CLIContext, storeName string, cdc *wire
 
 		var signingInfo slashing.ValidatorSigningInfo
 
-		err = cdc.UnmarshalBinary(res, &signingInfo)
+		err = cdc.UnmarshalBinaryLengthPrefixedBinary(res, &signingInfo)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(fmt.Sprintf("couldn't decode signing info. Error: %s", err.Error())))

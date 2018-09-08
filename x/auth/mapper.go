@@ -141,13 +141,13 @@ func (am AccountMapper) GetNextAccountNumber(ctx sdk.Context) int64 {
 	if bz == nil {
 		accNumber = 0
 	} else {
-		err := am.cdc.UnmarshalBinary(bz, &accNumber)
+		err := am.cdc.UnmarshalBinaryLengthPrefixedBinary(bz, &accNumber)
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	bz = am.cdc.MustMarshalBinary(accNumber + 1)
+	bz = am.cdc.MustMarshalBinaryLengthPrefixed(accNumber + 1)
 	store.Set(globalAccountNumberKey, bz)
 
 	return accNumber
